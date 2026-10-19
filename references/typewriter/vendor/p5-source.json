@@ -1,0 +1,9 @@
+{
+  "name": "p5",
+  "version": "1.11.3",
+  "license": "LGPL-2.1",
+  "requested_url": "https://cdn.jsdelivr.net/npm/p5@1.11.3/lib/p5.min.js",
+  "downloaded_package": "https://registry.npmmirror.com/p5/-/p5-1.11.3.tgz",
+  "sha256": "af51e6211e061b5ae463fbc5c3c1c272e5ca67fa560ed3513fde17325d837506",
+  "purpose": "Local playback of the user-provided reference sketch"
+}

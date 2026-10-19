@@ -1,0 +1,2 @@
+<!-- 用途：浏览器标签页里的眼镜标记。 -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#faf9f6"/><g fill="none" stroke="#67694e" stroke-width="2"><rect x="3" y="11" width="11" height="10" rx="4"/><rect x="18" y="11" width="11" height="10" rx="4"/><path d="M14 14 Q16 12 18 14"/></g></svg>

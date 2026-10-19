@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Typewriter Art · 原稿本地重放</title>
+  <style>
+    /* 用途：只给源码核对留一张简单桌面，不影响个人网站的样式。 */
+    body{margin:28px;background:#faf9f6;color:#34372d;font:14px/1.7 sans-serif}
+    main{max-width:600px;margin:auto}h1{font-size:21px}canvas{display:block;margin:24px auto;max-width:100%;height:auto!important}
+  </style>
+  <script>
+    // 原稿 OPC 只负责主题下拉菜单；在本地接到原生菜单，避免再加载在线控制面板。
+    window.OPC={select(name,choices){window[name]=choices[0];}};
+  </script>
+  <!-- 保留用户交来的五份原文件；这里仅替换 p5 的加载入口为已下载的同版本。 -->
+  <script src="sketch2596064/mySketch.js" defer></script>
+  <script src="sketch2596064/tab2.js" defer></script>
+  <script src="sketch2596064/tab3.js" defer></script>
+  <script src="sketch2596064/tab4.js" defer></script>
+  <script src="vendor/p5.min.js" defer></script>
+</head>
+<body>
+  <main><h1>Typewriter Art · 原稿本地重放</h1><p>用途：核对书籍指令、紧密行距和重复套打。绘图使用用户提供的原代码；菜单改为本地按钮，不访问网络。</p><label>主题 <select id="reference-theme"><option value="cat">cat</option><option value="dog">dog</option><option value="lady">lady</option></select></label></main>
+  <script>
+    // 菜单直接调用原稿已有的重绘方法，原画规则没有改写。
+    document.querySelector("#reference-theme").addEventListener("change",event=>{window.theme=event.target.value;parameterChanged();});
+  </script>
+</body>
+</html>
