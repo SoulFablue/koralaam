@@ -79,6 +79,9 @@ body.is-transitioning{overflow:hidden}
 .object-number{font-size:9px;color:#9a9e89;letter-spacing:1px}.object-label small{display:block;color:#8c907e;font:10px/1.5 "Segoe UI",Arial,sans-serif;letter-spacing:.2px;margin-top:3px}.object-arrow{margin-left:auto;font-size:15px;color:var(--olive);opacity:0;transform:translate(-4px,4px);transition:opacity .3s,transform .4s var(--ease)}
 .desk-object:is(:hover,:focus-visible) .object-art{transform:translateY(-7px)}
 .desk-object:is(:hover,:focus-visible) .object-arrow{opacity:1;transform:none}
+.desk-object.open .object-label{border-top-color:var(--olive)}
+.desk-object.open .object-number{color:var(--olive)}
+.desk-object.open .object-arrow{opacity:1;transform:none}
 /* 每幅画拆成小组，像剪纸一样移动；颗粒留在各组内部，动起来不会乱闪。 */
 .art-definitions{position:absolute;pointer-events:none}
 .crayon-art svg{display:block;width:100%;height:100%;overflow:visible}
@@ -136,25 +139,52 @@ summary{-webkit-tap-highlight-color:transparent}
 .project-hook{font-size:14px;color:var(--ink);line-height:1.85;margin:0 0 9px}
 .project-intro{font-size:12px;color:var(--muted);line-height:1.9;margin:0 0 19px}
 .project-story{border-top:1px solid var(--line);margin-top:0;margin-bottom:14px;padding-top:14px}
-.story-part{margin:7px 0 15px}.story-part h4,.background-details h4{font-size:11px;font-weight:500;color:var(--olive);margin:0 0 5px}
-.story-part p,.background-details p{font-size:12px;line-height:1.9;color:var(--muted);margin:0 0 12px}
+.story-part,.beat-part{margin:0 0 15px;padding-left:14px;border-left:2px solid #e7e5d6}
+.story-part h4,.beat-part h4,.background-details h4{font-size:11px;font-weight:500;color:var(--olive);margin:0 0 5px}
+.story-part p,.beat-part p{font-size:13px;line-height:1.9;color:var(--muted);margin:0}
+.background-details p{font-size:12px;line-height:1.9;color:var(--muted);margin:0 0 12px}
+.story-hook,.beat-hook{border-left-color:var(--olive)}
+.story-hook p,.beat-hook p{color:var(--ink);font-size:14px}
+.story-signal,.beat-signal{border-left-color:#b9a05d;background:#faf7ec;padding:12px 14px}
+.story-signal p,.beat-signal p{color:#5c5638}
 .text-action{align-self:start;color:var(--olive);text-decoration:none;border-bottom:1px solid #c7ccb7;font-size:11px;padding:3px 0;transition:color .25s,border-color .25s}
 .text-action:hover,.photo-gallery-link:hover{color:var(--ink);border-color:var(--olive)}
 .project-note{color:var(--muted);font-size:11px;padding:3px 0}
+.project-placeholder{border:1px solid var(--line);background:var(--paper);margin-bottom:20px;padding:22px 20px;display:flex;flex-direction:column;gap:15px}
+.placeholder-ticks{display:flex;gap:10px;flex-wrap:wrap}
+.placeholder-ticks span{font:12px/1 "Patrick Hand",Georgia,serif;padding:7px 13px;border:1px solid #c7cbbb;border-radius:20px;color:#5c5638;background:#faf7ec}
+.placeholder-ticks span:nth-child(3){color:#a34a3a;border-color:#e0c0b8;background:#faf0ec}
+.placeholder-caption{font-size:11px;color:var(--muted);margin:0;line-height:1.8}
 .notes-placeholder{padding:28px 0 40px;color:var(--muted)}
 .notes-placeholder>span:first-child{font-size:24px;color:var(--olive)}
 .notes-placeholder p{font-size:14px;margin:14px 0 8px}.notes-placeholder>span:last-child{font-size:12px}
 .background-details{border-top:1px solid var(--line);margin-top:14px;padding-top:16px}
-/* 四个篇章直接排在桌面目录下；窄栏留给文字，作品截图使用整页宽度。 */
-.desk-contents{margin:54px auto 0;max-width:850px}
-.desk-section{padding:36px 0 46px;border-top:1px solid var(--line);scroll-margin-top:28px}
-.desk-section>.eyebrow{font-size:9px;margin-bottom:12px}
-.desk-section-title{font:400 30px/1.4 Georgia,serif;letter-spacing:-.5px;margin:0 0 12px}
-.desk-section-title:focus{outline:none}
-.desk-section>.profile-facts,.desk-section>.experience-list{max-width:660px}
-.desk-section .project-grid{grid-template-columns:minmax(0,1fr);gap:26px}
-.desk-section .project-image-link img{height:auto;max-height:none;object-fit:contain}
-@media(max-width:650px){.desk-contents{margin-top:38px}.desk-section{padding:28px 0 34px;scroll-margin-top:20px}.desk-section-title{font-size:26px}}
+/* 第二屏像一本摊开的册子：书脊在左，四个章节在目录下方翻页切换。 */
+.book{margin:50px auto 0;max-width:850px;position:relative;padding-left:34px}
+.book:before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:11px;border-radius:6px;background:#e1dfd0;border:1px solid #cfcdba;box-shadow:inset -3px 0 0 #d2d0bf}
+.book-viewport{position:relative}
+.book-page{padding:8px 4px 20px;scroll-margin-top:28px;max-width:780px}
+.book-page>.eyebrow{font-size:9px;margin-bottom:12px}
+.book-page-title{font:400 30px/1.4 Georgia,serif;letter-spacing:-.5px;margin:0 0 12px;position:relative;display:inline-block}
+.book-page-title:focus{outline:none}
+.book-page>.profile-facts,.book-page>.experience-list,.book-page>.beat-list{max-width:660px}
+.book-page .project-grid{grid-template-columns:minmax(0,1fr);gap:26px}
+.book-page .project-image-link img{height:auto;max-height:none;object-fit:contain}
+.title-reveal{position:absolute;left:-4px;top:0;pointer-events:none}
+.book-nav{display:flex;align-items:center;justify-content:center;gap:22px;margin:14px 0 4px}
+.book-arrow{width:42px;height:42px;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:50%;background:transparent;transition:transform .3s var(--ease),border-color .3s}
+.book-arrow svg{width:20px;height:20px;fill:none;stroke:var(--olive);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.book-arrow:hover:not(:disabled){transform:translateY(-2px);border-color:var(--olive)}
+.book-arrow:disabled{opacity:.35;cursor:default}
+.book-dots{display:flex;gap:9px;align-items:center}
+.book-dot{width:9px;height:9px;border-radius:50%;border:1px solid #c7cbbb;background:transparent;padding:0;transition:background .3s,transform .3s}
+.book-dot.active{background:var(--olive);border-color:var(--olive);transform:scale(1.25)}
+.book-dot:focus-visible{outline-offset:3px}
+.flip-right{animation:book-flip-right .5s var(--ease)}
+.flip-left{animation:book-flip-left .5s var(--ease)}
+@keyframes book-flip-right{from{opacity:0;transform:perspective(1400px) rotateY(-16deg) translateX(28px)}to{opacity:1;transform:none}}
+@keyframes book-flip-left{from{opacity:0;transform:perspective(1400px) rotateY(16deg) translateX(-28px)}to{opacity:1;transform:none}}
+@media(max-width:650px){.book{margin-top:40px;padding-left:24px}.book-page-title{font-size:26px}}
 .experience-list{border-top:1px solid var(--line)}
 .experience-card{padding:24px 0;border-bottom:1px solid var(--line)}
 .experience-card:last-child{border-bottom:0;padding-bottom:4px}
@@ -162,6 +192,9 @@ summary{-webkit-tap-highlight-color:transparent}
 .experience-card h3{font-size:17px;font-weight:500;margin:0 0 13px}
 .experience-hook{font-size:14px;line-height:1.8;margin:0 0 9px}
 .experience-copy{font-size:12px;line-height:1.9;color:var(--muted);margin:0}
+.experience-beats{margin:2px 0 14px}
+.experience-detail{font-size:12px;line-height:1.9;color:#5c5638;margin:0;padding:12px 14px;background:#faf7ec;border-left:2px solid #b9a05d}
+.profile-footnote{font-size:12px;color:var(--muted);margin:18px 0 0;line-height:1.8}
 
 @media(max-width:650px){.project-grid{grid-template-columns:1fr;gap:18px}.project-card{padding:19px}.project-image-link img{height:auto;max-height:220px;object-fit:contain}.project-intro{font-size:13px}.project-hook{font-size:15px}.intent small{font-size:10px}}
 /* 窄屏一张便签一行，避免中文孤字挤到下一行；交互和配色保持一致。 */

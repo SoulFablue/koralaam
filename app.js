@@ -86,16 +86,21 @@
     portraitWrap.classList.remove("is-chatting");
     if (restoreFocus) chatTrigger.focus({ preventScroll: true });
   }
-  chatTrigger.addEventListener("click", () => {
+  function showGreeting(index = -1) {
     if (drag || returning || changingScene || onDesk) return;
-    // 每次随机挑一句，并跳过上一句，连续点击不会马上重复。
-    const choice = Math.floor(Math.random() * (greetingIndex < 0 ? greetings.length : greetings.length - 1));
-    greetingIndex = greetingIndex >= 0 && choice >= greetingIndex ? choice + 1 : choice;
+    if (index < 0) {
+      // 每次随机挑一句，并跳过上一句，连续点击不会马上重复。
+      const choice = Math.floor(Math.random() * (greetingIndex < 0 ? greetings.length : greetings.length - 1));
+      greetingIndex = greetingIndex >= 0 && choice >= greetingIndex ? choice + 1 : choice;
+    } else {
+      greetingIndex = index;
+    }
     chatBubble.querySelector(".bubble-message").textContent = translate(greetings[greetingIndex]);
     chatBubble.hidden = false;
     chatTrigger.setAttribute("aria-expanded", "true");
     portraitWrap.classList.add("is-chatting");
-  });
+  }
+  chatTrigger.addEventListener("click", () => showGreeting());
   chatBubble.querySelector(".bubble-close").addEventListener("click", () => closeChat(true));
   // 气泡内部与头像点击保留对话，点击纸面其他位置才收起。
   document.addEventListener("click", event => {
@@ -537,28 +542,40 @@
   // 展示小故事而非整份简历；缺少的链接不制造假按钮。
   const projects = [
     {
-      name: "CozyListen", kind: "精听浏览器插件", image: "assets/cozylisten.png",
-      alt: "CozyListen 界面：视频旁的逐句字幕、句末暂停、星标与听写区域",
-      hook: "把一次“没听懂”，变成顺手的练习。",
-      intro: "从自己的精听体验出发，把逐句复听、听写和复习接进浏览器。",
+      name: "CozyListen", kind: "A listening plugin", image: "assets/cozylisten.png",
+      alt: "CozyListen: sentence-by-sentence subtitles, end-of-sentence pause, starred clips and a dictation area",
+      hook: "One sentence you can't catch, turned into a smooth drill.",
+      intro: "From my own listening practice, sentence replay, dictation and review move into the browser.",
       story: [
-        ["起点", "练习时总在重复找上一句、暂停、记重点。我先从自己真正遇到的麻烦里找需求。"],
-        ["做法", "复用 YouTube 和 Bilibili 的字幕能力，接入逐句跳转、句末暂停、快捷键复听、双语字幕、星标与逐字稿导出。"],
-        ["走到用户面前", "从实用的精听方法出发，把工具介绍给有同样需要的人。也可以结合“尚雯婕英语学习法”的讨论，让对学习方法的兴趣，接上一段可以动手的练习。"],
+        { beat: "hook", text: "I kept dragging the progress bar back, pausing, looking words up — every time a line slipped past." },
+        { beat: "turn", text: "I turned a trending method, the “Shang Wenjie listening drill”, into a plugin people can actually use, reusing YouTube and Bilibili captions instead of building my own speech recognition." },
+        { beat: "signal", text: "Jump between sentences, auto-pause at the end, hotkey replay, bilingual captions and exportable transcripts." },
       ],
       url: "https://chromewebstore.google.com/detail/cozylisten/eaoepadpfoebkckpbiccpophjdlolhoi",
-      action: "在 Chrome 商店试试",
+      action: "Try it in the Chrome Store",
     },
     {
-      name: "PRDkit", kind: "产品经理原型工具包", image: "assets/prdkit.png",
-      alt: "PRDkit 示例界面：需求列表、移动端角色切换、原型预览和开发说明并列展示",
-      hook: "每做一次需求，留下下一次能用的东西。",
-      intro: "把日常需求拆成可复用的小能力，让工具包随着真实需求慢慢长出来。",
+      name: "PRDkit", kind: "A PM prototyping kit", image: "assets/prdkit.png",
+      alt: "PRDkit: a requirement list, mobile role switching, a prototype preview and dev notes side by side",
+      hook: "Every requirement, a thing you can reuse next time.",
+      intro: "Daily requirements broken into small, reusable pieces — a kit that grows with real needs.",
       story: [
-        ["起点", "出需求时，原型、角色、权限和开发说明经常需要一起讲清楚。我从这段日常工作流程开始拆解。"],
-        ["做法", "逐步沉淀角色切换、权限切换和必要的开发说明格式，把原型与规则放到同一处阅读。"],
-        ["留下什么", "不急着一次做全。随着需求补齐原子级能力，并积累后续可以复用的业务梳理文档与素材。"],
+        { beat: "hook", text: "Prototype, roles, permissions and dev notes usually need to be told together — but each side was reading a different doc." },
+        { beat: "turn", text: "I built up role switching, permission switching and one shared dev-note format, so the prototype and its rules live in the same place." },
+        { beat: "signal", text: "One output format adopted across the team, plus a growing set of reusable atoms for the next requirement." },
       ],
+    },
+    {
+      name: "AI Evals", kind: "An evaluation method, rebuilt", image: "",
+      alt: "AI Evals: execution traces, error categories and a Yes/No rubric",
+      hook: "How do you know an AI app got better? Not by feel.",
+      intro: "Rebuilding Hamel Husain's AI Evals course: from real traces to a Yes/No rubric.",
+      story: [
+        { beat: "hook", text: "“Better” is just a feeling until you can point at the exact failure. I wanted a way to point." },
+        { beat: "turn", text: "Starting from real execution traces, I used open coding and axial coding to sort model errors into causes, then split subjective quality into atomic Yes/No checks." },
+        { beat: "signal", text: "An Eval Rubric that turns “it feels better” into a checklist you can run and compare." },
+      ],
+      note: "Method over screenshots. Rebuilt from the AI Evals course by Hamel Husain.",
     },
   ];
 
@@ -582,26 +599,37 @@
     projects.forEach((project, index) => {
       const card = textElement("article", "project-card");
       card.append(textElement("p", "project-index", `0${index + 1} / ${translate(project.kind)}`));
-      const imageLink = externalLink(project.image, "", "project-image-link");
-      imageLink.setAttribute("aria-label", `${translate("View full screenshot")} — ${project.name} (${translate("Opens in a new tab")})`);
-      const image = document.createElement("img");
-      image.src = project.image;
-      image.alt = translate(project.alt);
-      image.loading = "lazy";
-      image.width = project.name === "CozyListen" ? 1280 : 1850;
-      image.height = project.name === "CozyListen" ? 800 : 946;
-      imageLink.append(image, textElement("span", "image-caption", "查看完整截图 ↗"));
-      card.append(imageLink, textElement("h3", "project-name", project.name), textElement("p", "project-hook", project.hook), textElement("p", "project-intro", project.intro));
-      // 作品篇幅不长，直接展示故事；首页与桌面复用同一份内容和排版。
+      if (project.image) {
+        const imageLink = externalLink(project.image, "", "project-image-link");
+        imageLink.setAttribute("aria-label", `${translate("View full screenshot")} — ${project.name} (${translate("Opens in a new tab")})`);
+        const image = document.createElement("img");
+        image.src = project.image;
+        image.alt = translate(project.alt);
+        image.loading = "lazy";
+        image.width = project.name === "CozyListen" ? 1280 : 1850;
+        image.height = project.name === "CozyListen" ? 800 : 946;
+        imageLink.append(image, textElement("span", "image-caption", "查看完整截图 ↗"));
+        card.append(imageLink);
+      } else {
+        // 没有截图的抽象作品：放一张“评测清单”占位，不伪造截图。
+        const placeholder = textElement("div", "project-placeholder");
+        const ticks = textElement("div", "placeholder-ticks");
+        ticks.append(textElement("span", "", "Yes"), textElement("span", "", "Yes"), textElement("span", "", "No"), textElement("span", "", "Yes"));
+        placeholder.append(ticks, textElement("p", "placeholder-caption", project.alt));
+        card.append(placeholder);
+      }
+      card.append(textElement("h3", "project-name", project.name), textElement("p", "project-hook", project.hook), textElement("p", "project-intro", project.intro));
+      // 三个节拍讲一个故事：一个麻烦、一个做法、一个留下的东西。
+      const beats = { hook: "The itch", turn: "The move", signal: "What's left" };
       const story = textElement("div", "project-story");
-      project.story.forEach(([label, paragraph]) => {
-        const part = textElement("div", "story-part");
-        part.append(textElement("h4", "", label), textElement("p", "", paragraph));
+      project.story.forEach(beat => {
+        const part = textElement("div", `story-part story-${beat.beat}`);
+        part.append(textElement("h4", "", beats[beat.beat]), textElement("p", "", beat.text));
         story.append(part);
       });
       card.append(story);
       if (project.url) card.append(externalLink(project.url, `${project.action} ↗`, "text-action"));
-      else card.append(textElement("span", "project-note", "从需求里，一点点积累。"));
+      else card.append(textElement("span", "project-note", project.note || "From a real need, built slowly."));
       grid.append(card);
     });
     return grid;
@@ -612,29 +640,33 @@
 
   // 工作只保留行业、岗位与真实做法，去掉公司、客户和内部业务数据。
   const categories = {
-    education: { index: "01 / EDUCATION", title: "教育经历", kicker: "Signals, then possibilities.", description: "从电路与系统出发，走向产品与交互。", facts: [{ place: "深圳 / 2021.09 — 2025.06", title: "深圳大学", text: "电子信息工程 · 本科" }], background: ["GPA 3.98 / 4.50 · 专业前 10%", "全英创新实验班 · 连续三年获奖学金", "学习计算机视觉、机器学习与大数据分析。"] },
-    work: { index: "02 / EXPERIENCE", title: "工作经历", kicker: "Work, in context.", description: "把 AI 接进流程，让真实问题有下一步。", experience: [
-      { role: "AI 产品经理", context: "企业软件", date: "2025.03 — 至今", hook: "让一次接待，留下可以继续跟进的线索。", text: "参与搭建 AI 客户管理流程，将线下接待转化为可记录、可分析的信息。", details: [["把信息接起来", "从接待录音、客户关联，到标签提取与分析，梳理自动化流程，减少信息遗漏与重复整理。"], ["重新看见意向", "结合对话原文、到访行为与人工判断，识别可能被低估的客户意向，为后续跟进提供线索。"]] },
-      { role: "AI 产品实习", context: "泛健康", date: "2025.01 — 2025.04", hook: "让对话，接得住下一个问题。", text: "设计健康问答中的动态问题推荐模块，结合用户对话与商业化场景，组织后续提问入口。" },
-      { role: "软件产品实习", context: "智能硬件", date: "2024.07 — 2024.12", hook: "让复杂操作，更容易上手。", text: "围绕激光加工中的批量操作，设计计算机视觉辅助功能，降低操作与学习成本。", details: [["为下一次使用积累数据", "梳理数据从生产、组织、标注到应用的闭环，让分散的加工数据成为可以持续使用的资产。"]] },
+    education: { index: "01 / EDUCATION", title: "Read the signal", kicker: "Signals, then possibilities.", description: "From circuits to product, the same instinct: find what matters.", facts: [{ place: "Shenzhen / 2021.09 — 2025.06", title: "Shenzhen University", text: "Electronic Information Engineering · BEng" }], beats: [
+      { beat: "hook", text: "I didn't start with product. I started with signal." },
+      { beat: "turn", text: "From circuits and signal processing to computer vision, I kept finding the same thing — recognizing what matters inside the noise." },
+      { beat: "signal", text: "That lens became the foundation of everything I build." },
+    ], background: ["GPA 3.98 / 4.50 · Top 10%", "All-English innovation class · three years of scholarships", "Computer vision, machine learning and data analysis."] },
+    work: { index: "02 / EXPERIENCE", title: "Turn noise into signal", kicker: "Work, in context.", description: "Three products, one move: turn the messy into the useful.", experience: [
+      { role: "AI Product Manager", context: "AI CRM", date: "2025.03 — now", hook: "A salesperson talks to dozens of customers a day — then the conversation is gone.", turn: "I turned recordings into data: AI tags first, people verify.", signal: "Recording rate +10% · follow-up rate +15%.", detail: "And “know before they arrive” — a customer profile, assembled from external and internal signals before they walk in. 30 pilot projects · 1,439 customers · 3.5% return visits." },
+      { role: "AI product intern", context: "Health chatbot", date: "2025.01 — 2025.04", hook: "A user asks something off-topic, and the bot says “sorry, I don't understand.”", turn: "Instead of a dead end, I turned the fallback into the next, better question.", signal: "Fallback rate below 3% · referral up 5%.", detail: "" },
+      { role: "Visual software intern", context: "Smart hardware", date: "2024.07 — 2024.12", hook: "The laser engraver “misread” a piece — and ruined it.", turn: "I closed a flywheel: every use becomes training data, so making and learning feed each other.", signal: "~20,000 data points a day flowing back · model accuracy +15%.", detail: "" },
     ] },
-    works: { index: "03 / SELECTED WORKS", title: "个人作品", kicker: "Small ideas. Made tangible.", description: "从自己的需要，到别人也用得上的小工具。", projects: true },
-    hobbies: { index: "04 / OFF THE CLOCK", title: "爱好", kicker: "Frames. Pages. Play.", description: "换一种方式，感受日常。", interests: [{ title: "摄影", text: "留意光，也留意平常。" }, { title: "足球", text: "把注意力交给下一脚。" }, { title: "篮球", text: "在传球与投篮之间。" }, { title: "看书", text: "借一双眼睛，看远一点。" }, { title: "音乐", text: "给日常换个节奏。" }] },
+    works: { index: "03 / SELECTED WORKS", title: "Make the signal into tools", kicker: "Small ideas. Made tangible.", description: "From my own needs, to tools others can use.", projects: true },
+    hobbies: { index: "04 / OFF THE CLOCK", title: "Feel it differently", kicker: "Frames. Pages. Play.", description: "The same instinct, trained off the clock.", interests: [{ title: "Photography", text: "Noticing the light." }, { title: "Football", text: "Giving attention to the next touch." }, { title: "Basketball", text: "Deciding between pass and shot." }, { title: "Reading", text: "Borrowing another pair of eyes." }, { title: "Music", text: "Giving the day a different rhythm." }] },
   };
+  const beatLabels = { hook: "The itch", turn: "The move", signal: "What's left" };
+  function beatPart(beat, text, className) {
+    const part = textElement("div", `${className} ${className}-${beat}`);
+    part.append(textElement("h4", "", beatLabels[beat]), textElement("p", "", text));
+    return part;
+  }
   function buildCategoryContent(category) {
     const content = document.createElement("div");
-    if (category.facts) {
-      content.className = "profile-facts";
-      category.facts.forEach(fact => {
-        const place = document.createElement("span");
-        place.className = "fact-place";
-        place.textContent = translate(fact.place);
-        const title = document.createElement("h3");
-        title.textContent = translate(fact.title);
-        const description = document.createElement("p");
-        description.textContent = translate(fact.text);
-        content.append(place, title, description);
-      });
+    if (category.beats) {
+      // 教育：三拍讲「从信号到产品」，硬数据收进注脚，不当主角。
+      content.className = "beat-list";
+      category.beats.forEach(beat => content.append(beatPart(beat.beat, beat.text, "beat-part")));
+      const fact = category.facts[0];
+      content.append(textElement("p", "profile-footnote", `${translate(fact.title)} · ${translate(fact.text)}`));
       if (category.background) {
         const more = textElement("div", "background-details");
         category.background.forEach(line => more.append(textElement("p", "", line)));
@@ -644,14 +676,11 @@
       content.className = "experience-list";
       category.experience.forEach(job => {
         const article = textElement("article", "experience-card");
-        article.append(textElement("p", "experience-meta", `${translate(job.context)} / ${translate(job.date)}`), textElement("h3", "", job.role), textElement("p", "experience-hook", job.hook), textElement("p", "experience-copy", job.text));
-        if (job.details) {
-          const more = textElement("div", "background-details");
-          job.details.forEach(([label, paragraph]) => {
-            more.append(textElement("h4", "", label), textElement("p", "", paragraph));
-          });
-          article.append(more);
-        }
+        article.append(textElement("p", "experience-meta", `${translate(job.context)} / ${translate(job.date)}`), textElement("h3", "", job.role));
+        const story = textElement("div", "experience-beats");
+        story.append(beatPart("hook", job.hook, "beat-part"), beatPart("turn", job.turn, "beat-part"), beatPart("signal", job.signal, "beat-part"));
+        article.append(story);
+        if (job.detail) article.append(textElement("p", "experience-detail", job.detail));
         content.append(article);
       });
     } else if (category.projects) {
@@ -682,33 +711,30 @@
       content.append(galleryLink);
     } else {
       content.className = "content-empty";
-      const heading = document.createElement("p");
-      heading.textContent = translate(category.empty);
-      const note = document.createElement("span");
-      note.textContent = translate("Still putting this together. See you soon.");
-      content.append(heading, note);
+      content.append(textElement("p", "", category.empty), textElement("span", "", "Still putting this together. See you soon."));
     }
     return content;
   }
-  // 第二屏像一页展开的履历：四部分一次呈现，原来的插画作为页内目录。
-  const deskContents = textElement("div", "desk-contents");
-  document.querySelector(".desk-surface").after(deskContents);
-  document.querySelectorAll("[data-category]").forEach(button => {
+  // 第二屏像一本摊开的册子：四个章节，目录物件翻到对应一章（翻页交互见 book.js）。
+  const book = textElement("div", "book");
+  const viewport = textElement("div", "book-viewport");
+  book.append(viewport);
+  document.querySelector(".desk-surface").after(book);
+  document.querySelectorAll("[data-category]").forEach((button, index) => {
     const key = button.dataset.category, category = categories[key];
-    const section = textElement("section", "desk-section");
-    section.id = `desk-${key}`;
-    const title = textElement("h2", "desk-section-title", category.title);
-    title.id = `desk-${key}-title`; title.tabIndex = -1;
-    section.setAttribute("aria-labelledby", title.id);
-    section.append(textElement("p", "eyebrow", category.index), title,
+    const page = textElement("section", "book-page");
+    page.id = `book-${key}`;
+    page.dataset.chapter = key;
+    page.hidden = index !== 0;
+    const title = textElement("h2", "book-page-title", category.title);
+    title.id = `book-${key}-title`; title.tabIndex = -1;
+    page.setAttribute("aria-labelledby", title.id);
+    page.append(textElement("p", "eyebrow", category.index), title,
       textElement("p", "detail-kicker", category.kicker),
       textElement("p", "detail-description", category.description), buildCategoryContent(category));
-    deskContents.append(section);
-    button.removeAttribute("aria-haspopup"); button.setAttribute("aria-controls", section.id);
-    button.addEventListener("click", () => {
-      section.scrollIntoView({ behavior: reducedMotion.matches ? "instant" : "smooth", block: "start" });
-      title.focus({ preventScroll: true });
-    });
+    viewport.append(page);
+    button.removeAttribute("aria-haspopup"); button.setAttribute("aria-controls", page.id);
+    button.dataset.chapter = key;
   });
 
   // 入口遵循键盘标签页规则：方向键切换，Home / End 跳到首尾。
@@ -758,4 +784,6 @@
   buildWords();
   document.fonts.ready.then(buildWords);
   if (location.hash === "#desk") changeScene(true);
+  // 首屏加载后自动弹出第一条问候，欢迎访客；稍作延迟等首屏先呈现。
+  else setTimeout(() => showGreeting(0), 650);
 })();

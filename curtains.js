@@ -7,9 +7,7 @@
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
   const translate = window.siteLanguage.translate;
   const editions = [
-    ["playground", "A good thing is worth a little pull.", "01"],
-    ["typewriter", "Someone familiar is behind here.", "02"],
-    ["almost-understood", "A little mystery. A little signal.", "03"]
+    ["playground", "A good thing is worth a little pull.", "01"]
   ];
   editions.forEach(([id, phrase, number]) => {
     const root = document.getElementById(id);

@@ -181,7 +181,6 @@
   }
   function takeShot() {
     if (phase !== "ready") return;
-    window.sitePlay.mark("playground");
     cancelDrag(); shots++; assisted = false; phase = "flying"; progress = 0; cooldown = 0;keyboardGuide=false;
     const range = 1.17 * power;
     shot = { dx: Math.cos(aim), dy: Math.sin(aim), range, duration: 1.1 + power * 1.1 };
