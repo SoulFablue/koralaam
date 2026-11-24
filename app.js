@@ -784,6 +784,7 @@
   buildWords();
   document.fonts.ready.then(buildWords);
   if (location.hash === "#desk") changeScene(true);
-  // 首屏加载后自动弹出第一条问候，欢迎访客；稍作延迟等首屏先呈现。
-  else setTimeout(() => showGreeting(0), 650);
+  // 等体素云海 Loading 散开、首屏真正呈现后，再自动弹出第一条问候。
+  else (window.siteLoader && window.siteLoader.ready ? window.siteLoader.ready : Promise.resolve())
+    .then(() => setTimeout(() => showGreeting(0), 650));
 })();
